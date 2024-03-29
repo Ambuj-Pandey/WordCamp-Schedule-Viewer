@@ -1,5 +1,6 @@
 import React from 'react';
 import CalendarView from './CalendarView';
+import './style.css';
 
 const App = () => {
   return (
