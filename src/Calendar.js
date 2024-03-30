@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import EventModal from './EventModal';
 import { addMonths, fromUnixTime, getDaysInMonth, getMonth, getYear, isFuture, isSameDay, isSameMonth } from 'date-fns';
 
 const MONTH_NAMES = [
@@ -46,8 +45,9 @@ const Calendar = ({ eventsData = [] }) => {
   };
 
   return (
-    <div className='border p-4'>
+    <div className='border rounded-md p-4'>
       <div className='flex justify-between items-center pb-4 border-b'>
+        {/* Previous Month and Next Month buttons */}
         <div className='flex'>
           <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2' onClick={() => changeMonth(-1)}>
             Previous Month
@@ -56,6 +56,7 @@ const Calendar = ({ eventsData = [] }) => {
             Next Month
           </button>
         </div>
+        {/* Year and Month selection dropdowns */}
         <div className='flex'>
           <select className='border rounded mr-2 px-4 py-2' value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} onBlur={(e) => setSelectedYear(e.target.value)}>
             {new Array(25).fill(undefined).map((_, i) => (
@@ -69,15 +70,18 @@ const Calendar = ({ eventsData = [] }) => {
           </select>
         </div>
       </div>
+      {/* Calendar table */}
       <div>
-        <table className='table-auto w-full'>
+        <table className='table-fixed w-full rounded-md'>
+          {/* Table header */}
           <thead>
-            <tr className='border-b'>
+            <tr className='border'>
               {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, i) => (
                 <th key={i} className='border-r px-4 py-2 text-center'>{day}</th>
               ))}
             </tr>
           </thead>
+          {/* Table body */}
           <tbody>
             {monthWeeks.map((week, i) => (
               <tr key={i}>
@@ -87,13 +91,17 @@ const Calendar = ({ eventsData = [] }) => {
                     isSameDay(new Date(selectedYear, selectedMonth, day), fromUnixTime(event["Start Date (YYYY-mm-dd)"]))
                   );
                   return (
-                    <td key={j} className='border px-4 py-2 text-center'>
+                    <td key={j} className='w-1/6 h-24 border relative'>
                       {day && (
                         <>
-                          {isTodayDay ? <p className='font-bold'>{day}</p> : <p>{day}</p>}
-                          {currentDayEvents.map(event => (
-                            <EventModal key={event.id} event={event} />
-                          ))}
+                          {/* Day number */}
+                          <p className='absolute top-0 left-0 right-0 text-center text-sm'>{day}</p>
+                          {/* Events */}
+                          <div className="mt-4">
+                            {currentDayEvents.map(event => (
+                              <a key={event.id} href={event.link} target="_blank" className="block py-1 px-2 mb-2 rounded bg-blue-500 text-white text-xs hover:bg-blue-700 hover:text-white">{event.title.rendered}</a>
+                            ))}
+                          </div>
                         </>
                       )}
                     </td>
@@ -106,6 +114,7 @@ const Calendar = ({ eventsData = [] }) => {
       </div>
     </div>
   );
+  
 };
 
 export default Calendar;
