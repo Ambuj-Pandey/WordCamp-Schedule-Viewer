@@ -1,6 +1,7 @@
 import React from 'react';
 import CalendarView from './CalendarView';
 import './style.css';
+import 'leaflet/dist/leaflet.css'
 
 const App = () => {
   return (

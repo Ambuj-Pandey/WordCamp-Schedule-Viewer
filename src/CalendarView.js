@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Calendar from './Calendar';
+import Map from './Map';
 // import FullCalendar from '@fullcalendar/react';
 // import dayGridPlugin from '@fullcalendar/daygrid';
 
@@ -8,6 +9,7 @@ const BASE_API = 'https://central.wordcamp.org/wp-json/wp/v2/wordcamps';
 
 const CalendarView = () => {
   const [events, setEvents] = useState([]);
+  const [isAllDataLoaded, setIsAllDataLoaded] = useState(false);
   // const calendarRef = useRef(null);
 
   useEffect(() => {
@@ -26,6 +28,7 @@ const CalendarView = () => {
             .then((responses) => {
               const allEvents = responses.reduce((acc, response) => acc.concat(response.data), []);
               setEvents((prevEvents) => [...prevEvents, ...allEvents]);
+              setIsAllDataLoaded(true);
             })
             .catch((err) => console.error('Error fetching additional pages:', err));
         }
@@ -56,6 +59,7 @@ const CalendarView = () => {
   return (
     <div className="wordcamp-calendar">
       <Calendar eventsData={events} />
+      {isAllDataLoaded ? <Map events={events} /> : <p>Loading All Data...</p>}
       {/* <div className="calendar-header">
         <button className="btn" onClick={() => calendarRef.current?.getApi()?.prev()}>Prev</button>
         <select className="year-select" onChange={handleYearChange} defaultValue={currentYear}>
